@@ -1,0 +1,18 @@
+<template>
+    <button
+          class="
+            h-10
+            px-4
+            text-white
+            font-semibold
+            bg-blue
+            hover:bg-darkblue
+            focus:outline-none
+            rounded-full
+            bottom-0
+            right-0
+          "
+        >
+          <slot></slot>
+        </button>
+</template>
