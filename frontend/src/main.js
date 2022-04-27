@@ -12,7 +12,6 @@ const app = createApp(App);
 
 app.use(router);
 app.use(store);
-
 app.component('base-button',BaseButton);
 
 app.mount('#app')

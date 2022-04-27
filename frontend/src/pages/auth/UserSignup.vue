@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import {nanoid} from 'nanoid';
+import { nanoid } from "nanoid";
 export default {
   data() {
     return {
@@ -118,7 +118,7 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       this.formIsValid = true;
       const formData = {
         id: nanoid(),
@@ -148,6 +148,20 @@ export default {
       }
       storedUsers.push(formData);
       localStorage.setItem("users", JSON.stringify(storedUsers));
+      const requestOptions = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          handle: formData.handle,
+          email: formData.email,
+          desc: formData.desc,
+          password: formData.password,
+        }),
+      };
+      const response = await fetch('http://localhost:3000/signup', requestOptions)
+      console.log(response);
     },
   },
 };
