@@ -77,6 +77,9 @@
       <p v-if="!formIsValid" class="text-red-100 mt-5 mb-5 text-lg">
         Invalid values. Please fill the form correctly
       </p>
+      <p v-if="message!==''" class="text-red-100 mt-5 mb-5 text-lg">
+          {{message}}
+      </p>
       <div class="mb-3 w-full flex justify-around">
         <button
           class="
@@ -115,6 +118,7 @@ export default {
       desc: "",
       password: "",
       formIsValid: true,
+      message: ''
     };
   },
   methods: {
@@ -152,6 +156,7 @@ export default {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          twitterId: formData.id,
           firstName: formData.firstName,
           lastName: formData.lastName,
           handle: formData.handle,
@@ -160,8 +165,10 @@ export default {
           password: formData.password,
         }),
       };
-      const response = await fetch('http://localhost:3000/signup', requestOptions)
-      console.log(response);
+      const response = await fetch('http://localhost:3000/signup', requestOptions);
+      const responseData = await response.json();
+      console.log(typeof(responseData.message));
+      this.message = responseData.message;
     },
   },
 };
