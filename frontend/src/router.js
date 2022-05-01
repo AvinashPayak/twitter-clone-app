@@ -3,7 +3,12 @@ import UserSignup from './pages/auth/UserSignup.vue';
 import UserLogin from './pages/auth/UserLogin.vue';
 
 import TwitterHome from './pages/twitter/TwitterHome.vue';
+import TwitterProfile from './pages/twitter/TwitterProfile.vue';
 import TwitterDashboard from './components/layouts/TwitterDashboard.vue'
+import ProfileTweets from './components/sections/ProfileTweets.vue'
+import ProfileFollowing from './components/sections/ProfileFollowing.vue'
+import ProfileFollowers from './components/sections/ProfileFollowers.vue'
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -14,10 +19,10 @@ const router = createRouter({
         { path: '/login', component: UserLogin },
         {path: '/users/:id', component:TwitterDashboard, children: [
             {path: 'home', component:TwitterHome},
-            {path:'profile',redirect:'/profile/tweets', children:[
-                {path: 'tweets',component:null},
-                {path:'followers', component:null},
-                {path:'following',component:null}
+            {path:'profile',component:TwitterProfile, redirect:'/users/:id/profile/tweets', children:[
+                {path: 'tweets',component:ProfileTweets},
+                {path:'followers', component:ProfileFollowers},
+                {path:'following',component:ProfileFollowing}
             ]}
         ]},
         { path: '/notFound(.*)', component: null }

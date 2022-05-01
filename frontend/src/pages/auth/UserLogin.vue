@@ -35,7 +35,10 @@
         />
       </div>
       <p v-if="!formIsValid" class="text-red-100 mt-5 mb-5 text-lg">
-        Invalid credentials
+        Please fill all the details
+      </p>
+      <p v-if="message!==''" class="text-red-100 mt-5 mb-5 text-lg">
+          {{message}}
       </p>
       <div class="mb-3 w-full flex justify-around">
         <button
@@ -70,10 +73,11 @@ export default {
       username: "",
       password: "",
       formIsValid: true,
+      message: ''
     };
   },
   methods: {
-    submitForm() {
+   async submitForm() {
       this.formIsValid = true;
       let formData = {
         handle: this.username,
@@ -83,35 +87,29 @@ export default {
         this.formIsValid = false;
         return;
       }
-      let storedUsers = [];
-      if (localStorage["users"]) {
-        storedUsers = JSON.parse(localStorage.getItem("users"));
-      }
-      let userData = {};
-      for (const user in storedUsers) {
-        if (
-          storedUsers[user].handle == formData.handle &&
-          storedUsers[user].password == formData.password
-        ) {
-          userData = storedUsers[user];
-          console.log("user found");
-          break;
-        }
-      }
-      if (JSON.stringify(userData) != JSON.stringify({})) {
-        console.log(userData);
-        this.$store.dispatch('user/loginUser', userData);
+      console.log(formData);
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          handle: formData.handle,
+          password: formData.password,
+        }),
+      };
+      const response = await fetch('http://localhost:3000/login', requestOptions);
+      const responseData = await response.json();
+      console.log(responseData.user);
+      if(responseData.user){
+        this.$store.dispatch('user/loginUser', responseData.user[0]);
         console.log('getter',this.$store.getters['user/getUser']);
         const user = this.$store.getters['user/getUser'];
-        const userId = user.id;
-        console.log(userId);
-        const path = '/users/'+ userId + '/home'
+        const twitterId = user.twitterId;
+        console.log(twitterId);
+        const path = '/users/'+ twitterId + '/home'
         console.log(path);
         this.$router.push(path);
       }
-      else{
-          console.log("no user found");
-      }
+      this.message = responseData.message;
     },
   },
 };

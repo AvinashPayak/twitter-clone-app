@@ -1,5 +1,6 @@
 const Users = require('../models/users');
 const bcrypt = require('bcrypt');
+const e = require('express');
 
 
 exports.putSignup = async (req, res, next) => {
@@ -43,8 +44,34 @@ exports.putSignup = async (req, res, next) => {
 }
 
 
-exports.postLogin = (req, res, next) => {
+exports.postLogin = async (req, res, next) => {
     const handle = req.body.handle;
     const password = req.body.password;
+    console.log(handle,password)
+
+    const user = await Users.getUser(handle);
+    console.log(user);
+    if(user.length==0){
+        res.status(200).json({
+            message: 'Username does not exist!'
+        });
+        return;
+    }
+    const authenticated = await bcrypt.compare(password,user[0].password);
+    console.log(authenticated);
+    if(!authenticated){
+        res.status(200).json({
+            message: 'Incorrect password'
+        });
+        return;
+    }
+    else {
+        res.status(200).json({
+            message: 'success!',
+            user
+        })
+    }
+
+    
     // authenticate user with database
 }

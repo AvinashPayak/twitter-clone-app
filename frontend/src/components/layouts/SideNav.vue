@@ -157,7 +157,14 @@
 
 <script>
 export default {
-    data() {
+  methods: {
+    getUserId() {
+      const user = this.$store.getters["user/getUser"];
+      const twitterId = user.twitterId;
+      return twitterId;
+    },
+  },
+  data() {
     return {
       navButtonTabs: [
         { icon: "fas fa-home", title: "Home", id: "home", link: "/" },
@@ -190,12 +197,13 @@ export default {
           icon: "far fa-user",
           title: "Profile",
           id: "profile",
-          link: "/users/c1",
+          link: `/users/${this.getUserId()}/profile/tweets`,
         },
         { icon: "fas fa-ellipsis-h", title: "More", id: "more", link: "#" },
       ],
-       dropdown: false
+      dropdown: false,
     };
   },
-}
+};
 </script>
+
