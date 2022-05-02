@@ -49,7 +49,7 @@ exports.postLogin = async (req, res, next) => {
     const password = req.body.password;
     console.log(handle,password)
 
-    const user = await Users.getUser(handle);
+    const user = await Users.fetchByHandle(handle);
     console.log(user);
     if(user.length==0){
         res.status(200).json({

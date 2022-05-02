@@ -6,8 +6,11 @@ export default {
     namespaced:true,
     state(){
         return {
-            tweets: {
+            profileTweets: {
                 //tweets data
+            },
+            homeTweets:{
+                
             }
         }
     },

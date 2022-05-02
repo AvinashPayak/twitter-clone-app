@@ -17,10 +17,11 @@ exports.putTweet = async (req, res, next) => {
 
 exports.getMyTweets = async (req, res, next) => {
     const twitterId = req.body.twitterId;
-    console.log(twitterId)
+    console.log('getting my tweets',twitterId)
 
-    const tweets = Tweets.fetchMyTweets(twitterId);
+    const tweets = await Tweets.fetchProfileTweets(twitterId);
     res.status(200).json({
+        message:'tweets recieved',
         tweets 
     })
 

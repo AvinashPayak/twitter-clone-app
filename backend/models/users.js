@@ -15,10 +15,11 @@ module.exports = class Users extends Model {
     }
 
     static fetchByHandle(handle){
-        return Users.query().select('handle').where('handle', '=',handle);
-    }
-    static getUser(handle){
         return Users.query().select('*').where('handle', '=',handle);
+    }
+
+    static fetchByTwitterId(twitterId){
+        return Users.query().select('*').where('twitterId', '=',twitterId);
     }
 
 }

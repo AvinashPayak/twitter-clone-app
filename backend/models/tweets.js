@@ -13,7 +13,7 @@ module.exports = class Tweets extends Model {
         return 
     }
 
-    static getProfileTweets(twitterId){
+    static fetchProfileTweets(twitterId){
         return Tweets.query().select('*').where('twitterId', '=' , twitterId);
     }
 }

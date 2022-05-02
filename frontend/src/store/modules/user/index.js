@@ -8,6 +8,9 @@ export default {
         return {
             user: {
                 //user data
+            },
+            searchedUser:{
+                // searched user data 
             }
         }
     },
