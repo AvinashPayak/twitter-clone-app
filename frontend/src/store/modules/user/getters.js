@@ -9,5 +9,11 @@ export default {
     getSearchedUser(state){
         console.log('getter searchedUser', state.searchedUser);
         return state.searchedUser;
+    },
+    getFollowers(state){
+        return state.followers;
+    },
+    getFollowing(state){
+        return state.following;
     }
 };

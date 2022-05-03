@@ -11,6 +11,12 @@ export default {
             },
             searchedUser:{
                 // searched user data 
+            },
+            following: {
+
+            },
+            followers: {
+
             }
         }
     },

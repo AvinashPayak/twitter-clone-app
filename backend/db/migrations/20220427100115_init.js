@@ -22,7 +22,7 @@ exports.up = function(knex) {
   })
   .createTable('followers', (table)=>{
     table.increments();
-    table.string('user').references('handle').inTable('users')
+    table.string('user').references('twitterId').inTable('users')
     table.string('following').notNullable()
     table.timestamps(true,true)
   })

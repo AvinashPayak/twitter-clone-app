@@ -5,47 +5,114 @@
         src="../../../public/twitterDp.png"
         class="h-40 w-40 rounded-full flex-none"
       />
-      <base-button>Edit Profile</base-button>
+      <base-button v-if="userDetails.twitterId !== getLoggedInUser().twitterId" @click="followUser"
+        >{{followBtnText}}</base-button
+      >
     </div>
     <div class="mt-4 text-lg">
-        <h2 class="text-3xl font-bold">{{getName}}</h2>
-        <p class="text-gray-500">@{{userDetails.handle}}</p>
-        <p>{{getDesc}}</p>
-        <div class="flex">
-            <router-link to="#"><a href="">Following: </a></router-link>
-            <router-link to="#"><a class="ml-4" href="">Followers: </a></router-link>
-        </div>
+      <h2 class="text-3xl font-bold">{{ getName }}</h2>
+      <p class="text-gray-500">@{{ userDetails.handle }}</p>
+      <p>{{ getDesc }}</p>
+      <div class="flex">
+        <router-link to="#"><a href="">Following: {{getFollowing.length}}</a></router-link>
+        <router-link to="#"
+          ><a class="ml-4" href="">Followers: {{getFollowers.length}}</a></router-link
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
 import BaseButton from "../UI/BaseButton.vue";
 export default {
-  props:['userDetails'],
+  data() {
+    return {
+      followBtnText: '',
+    };
+  },
+  created(){
+    this.loadFollowData();
+  },
+  props: ["userDetails"],
   components: {
     BaseButton,
   },
-  computed:{
-      followingRoute(){
-          return 0
-      },
-      followersRoute(){
-          return 0
-      },
-      getHandle(){
-        return this.userDetails.handle
-      },
-      getName(){
-        return `${this.userDetails.firstName} ${this.userDetails.lastName}`
-      },
-      getDesc(){
-        return this.userDetails.description;
-      },
-      getBorn(){
-        return this.userDetails.born;
-      },
-  }
+  computed: {
+    getFollowing(){
+      const following = this.$store.getters["user/getFollowing"];
+      return following;
+    },
+    getFollowers(){
+      const followers = this.$store.getters["user/getFollowers"];
+      return followers
+    },
+    getHandle() {
+      return this.userDetails.handle;
+    },
+    getName() {
+      return `${this.userDetails.firstName} ${this.userDetails.lastName}`;
+    },
+    getDesc() {
+      return this.userDetails.description;
+    },
+   
+  },
+  watch:{
+    $route(newRoute){
+      this.loadFollowData(newRoute);
+    },
+    followBtnText: function onchange(newValue,oldValue){
+      console.log(oldValue, newValue);
+      this.loadFollowData();
+    }
+  },
+  methods: {
+    async followUser() {
+      const user = this.$store.getters["user/getUser"].twitterId;
+      const following = this.$route.params.id;
+      const data = {
+        user,
+        following,
+      };
+      if (this.followBtnText == "follow") {
+        console.log("inside follow", data);
+        this.$store.dispatch("user/followUser", data);
+      } else {
+        console.log("inside unfollow");
+        this.$store.dispatch("user/unfollowUser", data);
+      }
+      this.loadFollowData();
+    },
+     getLoggedInUser() {
+      const user = this.$store.getters["user/getUser"];
+      return user;
+    },
+    async loadFollowData(){
+      const user = this.$store.getters["user/getUser"].twitterId;
+      const following = this.$route.params.id;
+      const data = {
+        user: user,
+      };
+      await this.$store.dispatch("user/getFollowers", data);
+      await this.$store.dispatch("user/getFollowing", data);
+      const followingList = this.$store.getters["user/getFollowing"];
+      let present = false;
+      console.log(followingList);
+      for(const user in followingList){
+        console.log(followingList[user].following, following);
+        if(followingList[user].following == following) {
+          present = true;
+          break;
+        }
+      }
+      console.log('present',present);
+      if (present) {
+        this.followBtnText = 'following';
+      } else {
+        this.followBtnText = 'follow';
+      }
+    }
+  },
 };
 </script>
