@@ -84,6 +84,9 @@ export default {
       formIsValid: true
     };
   },
+  watch:{
+
+  },
   methods: {
     async submitForm(){
       let formData = {
@@ -108,9 +111,7 @@ export default {
         this.$store.dispatch('user/searchedUser', responseData.searchedUser[0]);
         const searchedUser = this.$store.getters['user/getSearchedUser'];
         const twitterId = searchedUser.twitterId;
-        console.log(searchedUser);
-        const path = '/users/'+twitterId+'/searchedProfile/tweets'
-        console.log(path);
+        const path = '/users/'+twitterId+'/Profile/tweets'
         this.$router.replace(path);
       }
     }

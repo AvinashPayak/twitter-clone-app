@@ -23,13 +23,31 @@ export default {
   components: {
     TweetCard,
   },
-  data(){
+  data() {
     return {
-      user: ''
+      user: "",
+    };
+  },
+  created() {
+    this.getUserDetails();
+  },
+  watch:{
+    $route(newRoute){
+      this.getUserDetails(newRoute);
     }
   },
-  async created(){
-    const requestOptions = {
+  methods: {
+    getHandle() {
+      return this.user.handle;
+    },
+    getFirstName() {
+      return this.user.firstName;
+    },
+    getLastName() {
+      return this.user.lastName;
+    },
+    async getUserDetails() {
+      const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -42,19 +60,8 @@ export default {
       );
       const responseData = await response.json();
       const searchedUser = responseData.searchedUser[0];
-      console.log('searched user tweet list',searchedUser);
-      this.user = searchedUser
-  },
-  methods: {
-    getHandle() {
-      console.log("get handle")
-      return this.user.handle;
-    },
-    getFirstName() {
-      return this.user.firstName;
-    },
-    getLastName() {
-      return this.user.lastName;
+      console.log("searched user tweet list", searchedUser);
+      this.user = searchedUser;
     },
   },
 };

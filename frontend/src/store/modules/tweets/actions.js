@@ -9,7 +9,6 @@ export default {
                 text: data.text,
             }),
         };
-        console.log("inside actions", data.tweetId, data.twitterId, data.text);
         const response = await fetch('http://localhost:3000/tweets/tweet', requestOptions);
         const responseData = await response.json();
         console.log(responseData.message);
@@ -26,7 +25,5 @@ export default {
         const response = await fetch('http://localhost:3000/tweets/myTweets', requestOptions);
         const responseData = await response.json();
         context.commit('loadProfileTweets',responseData.tweets);
-        console.log(responseData.message);
-        console.log(responseData.tweets);
     }
 };
