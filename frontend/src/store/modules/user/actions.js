@@ -11,14 +11,11 @@ export default {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         };
-        console.log(context);
-        console.log("follow User Action: ",data)
         const response = await fetch('http://localhost:3000/user/followUser',requestOptions);
         const responseData = await response.json();
         console.log('actions: followUser', responseData.message);
     },
     async unfollowUser(context, data){
-        console.log("inside unfollow user", data, context);
         const requestOptions = {
             method: 'DELETE',
             headers: { "Content-Type": "application/json" },
@@ -36,8 +33,22 @@ export default {
         };
         const response = await fetch('http://localhost:3000/user/getFollowers',requestOptions);
         const responseData = await response.json();
-        console.log('actions: getFollowers', responseData.followers);
-        context.commit('getFollowers', responseData.followers);
+        const followerIds = responseData.followers;
+        const users = [];
+        for(const id in followerIds){
+            const requestOptions = {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  twitterId:followerIds[id].user
+                })
+              };
+              const response = await fetch('http://localhost:3000/user/searchedUser',requestOptions);
+              const responseData = await response.json();
+              let user = responseData.searchedUser[0];
+              users.push(user);
+        }
+        context.commit('getFollowers', users);
     },
     async getFollowing(context,data){
         const requestOptions = {
@@ -47,7 +58,21 @@ export default {
         };
         const response = await fetch('http://localhost:3000/user/getFollowing',requestOptions);
         const responseData = await response.json();
-        console.log('actions: getFollowing', responseData.following);
-        context.commit('getFollowing', responseData.following);
+        const followingIds = responseData.following;
+        const users = [];
+        for(const id in followingIds){
+            const requestOptions = {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  twitterId:followingIds[id].following
+                })
+              };
+              const response = await fetch('http://localhost:3000/user/searchedUser',requestOptions);
+              const responseData = await response.json();
+              let user = responseData.searchedUser[0];
+              users.push(user);
+        }
+        context.commit('getFollowing', users);
     }
 };

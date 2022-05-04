@@ -87,7 +87,6 @@ export default {
   methods: {
     async getMyDetails() {
       const user = this.$store.getters["user/getUser"];
-      console.log(user.twitterId , this.$route.params.id);
       if (user.twitterId == this.$route.params.id) {
         this.user = user;
       } else {

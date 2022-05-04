@@ -135,7 +135,6 @@ export default {
         followers: [],
         following: [],
       };
-      console.log(formData);
       if (
         this.firstName === "" ||
         this.lastName === "" ||
@@ -167,7 +166,6 @@ export default {
       };
       const response = await fetch('http://localhost:3000/signup', requestOptions);
       const responseData = await response.json();
-      console.log(typeof(responseData.message));
       this.message = responseData.message;
     },
   },

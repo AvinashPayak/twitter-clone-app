@@ -6,11 +6,9 @@ export default {
         state.searchedUser = payload;
     },
     getFollowing(state,payload){
-        console.log('mutations following', payload);
         state.following = payload;
     },
     getFollowers(state,payload){
-        console.log('mutations followers', payload)
         state.followers = payload;
     }
 }

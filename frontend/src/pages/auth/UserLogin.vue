@@ -87,7 +87,6 @@ export default {
         this.formIsValid = false;
         return;
       }
-      console.log(formData);
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -98,15 +97,11 @@ export default {
       };
       const response = await fetch('http://localhost:3000/login', requestOptions);
       const responseData = await response.json();
-      console.log(responseData.user);
       if(responseData.user){
         this.$store.dispatch('user/loginUser', responseData.user[0]);
-        console.log('getter',this.$store.getters['user/getUser']);
         const user = this.$store.getters['user/getUser'];
         const twitterId = user.twitterId;
-        console.log(twitterId);
         const path = '/users/'+ twitterId + '/home'
-        console.log(path);
         this.$router.push(path);
       }
       this.message = responseData.message;

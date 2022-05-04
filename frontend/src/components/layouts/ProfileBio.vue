@@ -76,10 +76,8 @@ export default {
         following,
       };
       if (this.followBtnText == "follow") {
-        console.log("inside follow", data);
         this.$store.dispatch("user/followUser", data);
       } else {
-        console.log("inside unfollow");
         this.$store.dispatch("user/unfollowUser", data);
       }
       this.loadFollowData();
@@ -98,15 +96,12 @@ export default {
       await this.$store.dispatch("user/getFollowing", data);
       const followingList = this.$store.getters["user/getFollowing"];
       let present = false;
-      console.log(followingList);
       for(const user in followingList){
-        console.log(followingList[user].following, following);
-        if(followingList[user].following == following) {
+        if(followingList[user].twitterId == following) {
           present = true;
           break;
         }
       }
-      console.log('present',present);
       if (present) {
         this.followBtnText = 'following';
       } else {

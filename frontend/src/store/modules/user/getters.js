@@ -7,7 +7,6 @@ export default {
         else return false;
     },
     getSearchedUser(state){
-        console.log('getter searchedUser', state.searchedUser);
         return state.searchedUser;
     },
     getFollowers(state){
