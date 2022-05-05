@@ -7,10 +7,10 @@ export default {
     state(){
         return {
             profileTweets: {
-                //tweets data
+                // profile tweets data
             },
             homeTweets:{
-                
+                // home tweets data
             }
         }
     },

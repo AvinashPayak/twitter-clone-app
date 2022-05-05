@@ -1,5 +1,5 @@
 <template>
-    <!-- 
+  <!-- 
             side-nav
             the-header
             post-tweet
@@ -7,33 +7,52 @@
             trending-tab   
          -->
 
-    <div class="lg:w-1/2 w-full h-full overflow-y-scroll">
-      <h1>Twitter Home {{ getHandle }}</h1>
-    </div>
+  <div class="lg:w-1/2 w-full h-full overflow-y-scroll">
+    <post-tweet></post-tweet>
+      <section>
+    <tweet-card
+      class="px-5 py-3 vorder-b-8 border-lighter flex"
+      v-for="tweet in tweets"
+      :key="tweet.tweetId"
+      :username="tweet.handle"
+      :first-name="tweet.firstName"
+      :last-name="tweet.lastName"
+      :handle="tweet.handle"
+      :text="tweet.text"
+      comments="0"
+      likes="0"
+      retweets="0"
+    ></tweet-card>
+  </section>
+
+  </div>
 </template>
 
 <script>
+import PostTweet from "../../components/layouts/Post-Tweet/PostTweet.vue";
+import TweetCard from '../../components/layouts/Tweet/TweetCard.vue'
 export default {
+  components: {
+    PostTweet,
+    TweetCard
+  },
   data() {
     return {
-      handle: "",
-      firstName: "",
-      lastName: "",
+      tweets: {}
     };
   },
-  beforeCreate() {
-    const userData = this.$store.getters["user/getUser"];
-
-    this.handle = userData.handle;
-    this.firstName = userData.firstName;
-    this.lastName = userData.lastName;
+  async created() {
+    const twitterId = this.$store.getters["user/getUser"].twitterId;
+    const data = {
+      twitterId,
+    };
+    await this.$store.dispatch("tweets/loadHomeTweets", data);
+    this.tweets = this.$store.getters["tweets/getHomeTweets"];
   },
-  computed: {
-    getHandle() {
-      const userData = this.$store.getters["user/getUser"];
-      console.log(userData);
-      return userData.handle;
+  methods: {
+    getTweets() {
+      
     },
   },
 };
-</script>SideNav
+</script>

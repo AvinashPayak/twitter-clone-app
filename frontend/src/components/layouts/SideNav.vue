@@ -167,7 +167,7 @@ export default {
   data() {
     return {
       navButtonTabs: [
-        { icon: "fas fa-home", title: "Home", id: "home", link: "/" },
+        { icon: "fas fa-home", title: "Home", id: "home", link: `/users/${this.getUserId}/home` },
         { icon: "fas fa-hashtag", title: "Explore", id: "explore", link: "#" },
         {
           icon: "far fa-bell",

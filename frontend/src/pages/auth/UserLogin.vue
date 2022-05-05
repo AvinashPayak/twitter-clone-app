@@ -98,11 +98,12 @@ export default {
       const response = await fetch('http://localhost:3000/login', requestOptions);
       const responseData = await response.json();
       if(responseData.user){
-        this.$store.dispatch('user/loginUser', responseData.user[0]);
-        const user = this.$store.getters['user/getUser'];
+        await this.$store.dispatch('user/loginUser', responseData.user[0]);
+        const user = await this.$store.getters['user/getUser'];
         const twitterId = user.twitterId;
         const path = '/users/'+ twitterId + '/home'
         this.$router.push(path);
+        
       }
       this.message = responseData.message;
     },

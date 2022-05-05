@@ -23,8 +23,17 @@ exports.getMyTweets = async (req, res, next) => {
     res.status(200).json({
         message:'tweets recieved',
         tweets 
-    })
-
-    
+    }) 
     // authenticate user with database
+}
+
+exports.getHomeTweets = async(req, res, next) => {
+    const twitterId = req.body.twitterId;
+    console.log("get home tweets", twitterId);
+
+    const tweets = await Tweets.fetchHomeTweets(twitterId);
+    res.status(200).json({
+        message: 'user home tweets recieved',
+        tweets
+    });
 }

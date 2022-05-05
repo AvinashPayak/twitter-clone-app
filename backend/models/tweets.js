@@ -6,14 +6,19 @@ module.exports = class Tweets extends Model {
     }
 
     static save(tweetId, twitterId, text) {
-        return Tweets.query().insert({tweetId,text,twitterId});
+        return Tweets.query().insert({ tweetId, text, twitterId });
     }
 
-    static getUserHomeTweets(handle){
-        return 
+    static fetchHomeTweets(twitterId) {
+        const query =  Tweets.query()
+        .join('followers', 'followers.following', '=', 'tweets.twitterId')
+        .select('*')
+        //const tweets = q.toKnexQuery().toSQL();
+        //console.log(tweets);
+        return query;
     }
 
-    static fetchProfileTweets(twitterId){
-        return Tweets.query().select('*').where('twitterId', '=' , twitterId);
+    static fetchProfileTweets(twitterId) {
+        return Tweets.query().select('*').where('twitterId', '=', twitterId);
     }
 }
