@@ -6,12 +6,6 @@
 
 <script>
 export default {
-  beforeCreate(){
-    const data = [];
-    if(!localStorage["users"]) {
-      localStorage.setItem('users',data);
-    }
-  }
 }
 </script>
 

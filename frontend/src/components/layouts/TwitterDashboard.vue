@@ -1,13 +1,5 @@
 <template>
       <side-nav></side-nav>
-    <!-- 
-            side-nav
-            the-header
-            post-tweet
-            tweet-list
-            trending-tab   
-         -->
-
     <router-view></router-view>
     <trending-tab></trending-tab>
 </template>

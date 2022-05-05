@@ -14,5 +14,8 @@ export default {
     },
     getFollowing(state){
         return state.following;
+    },
+    getToken(state){
+        return state.token;
     }
-};
+}

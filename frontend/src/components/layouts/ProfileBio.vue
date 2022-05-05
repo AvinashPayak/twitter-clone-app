@@ -5,8 +5,10 @@
         src="../../../public/twitterDp.png"
         class="h-40 w-40 rounded-full flex-none"
       />
-      <base-button v-if="userDetails.twitterId !== getLoggedInUser().twitterId" @click="followUser"
-        >{{followBtnText}}</base-button
+      <base-button
+        v-if="userDetails.twitterId !== getLoggedInUser().twitterId"
+        @click="followUser"
+        >{{ followBtnText }}</base-button
       >
     </div>
     <div class="mt-4 text-lg">
@@ -14,9 +16,13 @@
       <p class="text-gray-500">@{{ userDetails.handle }}</p>
       <p>{{ getDesc }}</p>
       <div class="flex">
-        <router-link to="#"><a href="">Following: {{getFollowing.length}}</a></router-link>
         <router-link to="#"
-          ><a class="ml-4" href="">Followers: {{getFollowers.length}}</a></router-link
+          ><a href="">Following: {{ getFollowing.length }}</a></router-link
+        >
+        <router-link to="#"
+          ><a class="ml-4" href=""
+            >Followers: {{ getFollowers.length }}</a
+          ></router-link
         >
       </div>
     </div>
@@ -28,10 +34,10 @@ import BaseButton from "../UI/BaseButton.vue";
 export default {
   data() {
     return {
-      followBtnText: '',
+      followBtnText: "",
     };
   },
-  created(){
+  created() {
     this.loadFollowData();
   },
   props: ["userDetails"],
@@ -39,13 +45,13 @@ export default {
     BaseButton,
   },
   computed: {
-    getFollowing(){
+    getFollowing() {
       const following = this.$store.getters["user/getFollowing"];
       return following;
     },
-    getFollowers(){
+    getFollowers() {
       const followers = this.$store.getters["user/getFollowers"];
-      return followers
+      return followers;
     },
     getHandle() {
       return this.userDetails.handle;
@@ -56,25 +62,27 @@ export default {
     getDesc() {
       return this.userDetails.description;
     },
-   
   },
-  watch:{
-    $route(newRoute){
+  watch: {
+    $route(newRoute) {
       this.loadFollowData(newRoute);
     },
-    followBtnText: function onchange(newValue,oldValue){
+    followBtnText: function onchange(newValue, oldValue) {
       console.log(oldValue, newValue);
       this.loadFollowData();
-    }
+    },
   },
   methods: {
     async followUser() {
       const user = this.$store.getters["user/getUser"].twitterId;
       const following = this.$route.params.id;
+      const token = this.$store.getters["user/getToken"];
       const data = {
         user,
         following,
+        token,
       };
+      console.log("token from frontend", token);
       if (this.followBtnText == "follow") {
         this.$store.dispatch("user/followUser", data);
       } else {
@@ -82,32 +90,35 @@ export default {
       }
       this.loadFollowData();
     },
-     getLoggedInUser() {
+    getLoggedInUser() {
       const user = this.$store.getters["user/getUser"];
       return user;
     },
-    async loadFollowData(){
+    async loadFollowData() {
       const user = this.$store.getters["user/getUser"].twitterId;
+      const token = this.$store.getters["user/getToken"];
+
       const following = this.$route.params.id;
       const data = {
         user: user,
+        token
       };
       await this.$store.dispatch("user/getFollowers", data);
       await this.$store.dispatch("user/getFollowing", data);
       const followingList = this.$store.getters["user/getFollowing"];
       let present = false;
-      for(const user in followingList){
-        if(followingList[user].twitterId == following) {
+      for (const user in followingList) {
+        if (followingList[user].twitterId == following) {
           present = true;
           break;
         }
       }
       if (present) {
-        this.followBtnText = 'following';
+        this.followBtnText = "following";
       } else {
-        this.followBtnText = 'follow';
+        this.followBtnText = "follow";
       }
-    }
+    },
   },
 };
 </script>

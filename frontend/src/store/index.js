@@ -7,7 +7,12 @@ const store = createStore({
     modules: {
         user: userModule,
         tweets: tweetsModule
-    }
+    },
+    state(){
+        return {
+            token: ''
+        }
+    },
 });
 
 export default store;

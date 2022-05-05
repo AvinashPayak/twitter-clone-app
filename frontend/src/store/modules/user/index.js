@@ -17,7 +17,8 @@ export default {
             },
             followers: {
 
-            }
+            },
+            token: ''
         }
     },
     mutations,

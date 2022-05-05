@@ -24,10 +24,12 @@ export default {
   },
   methods: {
     submitForm() {
+      const token = this.$store.getters["user/getToken"];
       const formData = {
         tweetId: nanoid(),  
         twitterId: this.getTwitterId(),
-        text: this.text
+        text: this.text,
+        token
       };
       if (this.text === "") {
         return;

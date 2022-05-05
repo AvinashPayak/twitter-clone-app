@@ -81,8 +81,10 @@
           class="w-10 h-10 rounded-full border border-lighter"
         />
         <div class="hidden lg:block ml-4">
-          <p class="text-sm font-bold leading-tight">Avinash Payak</p>
-          <p class="text-sm leading-tight">@avinashpayak</p>
+          <p class="text-sm font-bold leading-tight">
+            {{ getUser().firstName }} {{ getUser().lastName }}
+          </p>
+          <p class="text-sm leading-tight">@{{ getUser().handle }}</p>
         </div>
         <i class="hidden lg:block fas fa-angle-down ml-auto text-lg"></i>
       </button>
@@ -113,12 +115,14 @@
           "
         >
           <img
-            src="profile.jpg"
+            src="../../../public/twitterDp.png"
             class="w-10 h-10 rounded-full border border-lighter"
           />
           <div class="ml-4">
-            <p class="text-sm font-bold leading-tight">Avinash Payak</p>
-            <p class="text-sm leading-tight">@avinashpayak</p>
+            <p class="text-sm font-bold leading-tight">
+              {{ getUser().firstName }} {{ getUser().lastName }}
+            </p>
+            <p class="text-sm leading-tight">@{{ getUser().handle }}</p>
           </div>
           <i class="fas fa-check ml-auto test-blue"></i>
         </button>
@@ -137,7 +141,7 @@
           Add an existing account
         </button>
         <button
-          @click="dropdown = !dropdown"
+          @click="logout"
           class="
             w-full
             text-left
@@ -148,7 +152,7 @@
             focus:outline-none
           "
         >
-          Log out @avinashpayak
+          Log out @{{ getUser().handle }}
         </button>
       </div>
     </div>
@@ -158,16 +162,27 @@
 <script>
 export default {
   methods: {
-    getUserId() {
+    getUser() {
       const user = this.$store.getters["user/getUser"];
-      const twitterId = user.twitterId;
-      return twitterId;
+      return user;
+    },
+    logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("expiryDate");
+      const path = "/login";
+      this.$router.push(path);
     },
   },
   data() {
     return {
       navButtonTabs: [
-        { icon: "fas fa-home", title: "Home", id: "home", link: `/users/${this.getUserId}/home` },
+        {
+          icon: "fas fa-home",
+          title: "Home",
+          id: "home",
+          link: `/users/${this.getUser().twitterId}/home`,
+        },
         { icon: "fas fa-hashtag", title: "Explore", id: "explore", link: "#" },
         {
           icon: "far fa-bell",
@@ -197,7 +212,7 @@ export default {
           icon: "far fa-user",
           title: "Profile",
           id: "profile",
-          link: `/users/${this.getUserId()}/profile/tweets`,
+          link: `/users/${this.getUser().twitterId}/profile/tweets`,
         },
         { icon: "fas fa-ellipsis-h", title: "More", id: "more", link: "#" },
       ],

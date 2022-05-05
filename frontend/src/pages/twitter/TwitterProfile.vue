@@ -5,7 +5,7 @@
         <h1 class="text-xl font-bold">
           {{ user.firstName }} {{ user.lastName }}
         </h1>
-        <h3>Total Tweets: {{getTotalTweets}}</h3>
+        <h3>Total Tweets: {{ getTotalTweets }}</h3>
       </div>
     </the-header>
     <profile-bio :user-details="user"></profile-bio>
@@ -70,32 +70,47 @@ export default {
   data() {
     return {
       currentComponent: "ProfileTweets",
-      user: ''
+      user: "",
     };
   },
   components: {
     ProfileBio,
   },
-  created(){
-    this.getMyDetails();
-  },
-  watch:{
-    $route(newRoute){
-      this.getMyDetails(newRoute);
+  created() {
+    const token = this.$store.getters["user/getToken"];
+    if (!token) {
+      const path = "/login";
+      this.$router.push(path);
+    } else {
+      this.getMyDetails();
     }
+  },
+  watch: {
+    $route(newRoute) {
+      this.getMyDetails(newRoute);
+    },
   },
   methods: {
     async getMyDetails() {
       const user = this.$store.getters["user/getUser"];
+      console.log("twitter profile user details", user);
+      console.log("twitter params id", this.$route.params.id);
       if (user.twitterId == this.$route.params.id) {
         this.user = user;
       } else {
+        const token = this.$store.getters["user/getToken"];
+        console.log("twitter profile token", token);
         const data = {
           twitterId: this.$route.params.id,
+          token,
         };
+        console.log(data);
         const requestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(data),
         };
         const response = await fetch(
@@ -103,9 +118,10 @@ export default {
           requestOptions
         );
         const responseData = await response.json();
+        console.log(responseData);
         this.$store.dispatch("user/searchedUser", responseData.searchedUser[0]);
         const searchedUser = this.$store.getters["user/getSearchedUser"];
-        this.user =  searchedUser;
+        this.user = searchedUser;
       }
     },
   },
@@ -123,7 +139,7 @@ export default {
       return 0;
     },
     getTotalTweets() {
-      const totalTweets = this.$store.getters['tweets/getProfileTweets'].length;
+      const totalTweets = this.$store.getters["tweets/getProfileTweets"].length;
       return totalTweets;
     },
   },

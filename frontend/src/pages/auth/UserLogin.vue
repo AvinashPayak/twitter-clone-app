@@ -97,8 +97,17 @@ export default {
       };
       const response = await fetch('http://localhost:3000/login', requestOptions);
       const responseData = await response.json();
+      console.log(responseData.token);
+      localStorage.setItem('token', responseData.token);
+        localStorage.setItem('user', JSON.stringify(responseData.user));
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(
+          new Date().getTime() + remainingMilliseconds
+        );
+        localStorage.setItem('expiryDate', expiryDate.toISOString());
+        console.log(responseData.user);
       if(responseData.user){
-        await this.$store.dispatch('user/loginUser', responseData.user[0]);
+        await this.$store.dispatch('user/loginUser', responseData);
         const user = await this.$store.getters['user/getUser'];
         const twitterId = user.twitterId;
         const path = '/users/'+ twitterId + '/home'

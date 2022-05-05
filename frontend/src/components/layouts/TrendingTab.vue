@@ -11,19 +11,28 @@
       relative
     "
   >
-  <form v-on:keydown.enter.prevent="submitForm">
-<input
-      class="pl-12 rounded-full w-full p-2 bg-lighter text-sm mb-4"
-      placeholder="Search Twitter"
-      name="search"
-      id="search"
-      v-model.trim="search"
-    />
-    <i
-      class="fas fa-search absolute left-0 top-0 mt-5 ml-12 text-sm text-light"
-    ></i>
-  </form>
-    
+    <form v-on:keydown.enter.prevent="submitForm">
+      <input
+        class="pl-12 rounded-full w-full p-2 bg-lighter text-sm mb-4"
+        placeholder="Search Twitter"
+        name="search"
+        id="search"
+        v-model.trim="search"
+      />
+      <i
+        class="
+          fas
+          fa-search
+          absolute
+          left-0
+          top-0
+          mt-5
+          ml-12
+          text-sm text-light
+        "
+      ></i>
+    </form>
+
     <div class="w-full rounder-lg bg-lightest p-3">
       <div class="flex items-center justify-between p-3">
         <p class="text-lg font-bold">Trends for you</p>
@@ -80,41 +89,47 @@ export default {
         { top: "Trending in US", title: "Denim Day", bottom: "40k tweets" },
         { top: "Trending", title: "When Beyonce", bottom: "25.4k tweets" },
       ],
-      search:'',
-      formIsValid: true
+      search: "",
+      formIsValid: true,
     };
   },
-  watch:{
-
-  },
+  watch: {},
   methods: {
-    async submitForm(){
+    async submitForm() {
       let formData = {
-        search: this.search
-      }
-    if (this.search === "") {
+        search: this.search,
+      };
+      if (this.search === "") {
         this.formIsValid = false;
         return;
       }
       console.log(formData);
+      const token = this.$store.getters["user/getToken"];
+
       const requestOptions = {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           handle: formData.search,
-        })
+        }),
       };
-      const response = await fetch('http://localhost:3000/user/searchedUser',requestOptions);
+      const response = await fetch(
+        "http://localhost:3000/user/searchedUser",
+        requestOptions
+      );
       const responseData = await response.json();
       console.log(responseData.searchedUser);
-      if(responseData.searchedUser){
-        this.$store.dispatch('user/searchedUser', responseData.searchedUser[0]);
-        const searchedUser = this.$store.getters['user/getSearchedUser'];
+      if (responseData.searchedUser) {
+        this.$store.dispatch("user/searchedUser", responseData.searchedUser[0]);
+        const searchedUser = this.$store.getters["user/getSearchedUser"];
         const twitterId = searchedUser.twitterId;
-        const path = '/users/'+twitterId+'/Profile/tweets'
+        const path = "/users/" + twitterId + "/Profile/tweets";
         this.$router.replace(path);
       }
-    }
-  }
+    },
+  },
 };
 </script>

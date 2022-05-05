@@ -11,7 +11,8 @@ export default {
             },
             homeTweets:{
                 // home tweets data
-            }
+            },
+            token: ''
         }
     },
     mutations,

@@ -1,7 +1,7 @@
 const Users = require('../models/users');
 const bcrypt = require('bcrypt');
-const e = require('express');
-
+const express = require('express');
+const jwt = require('jsonwebtoken');
 
 exports.putSignup = async (req, res, next) => {
     const twitterId = req.body.twitterId;
@@ -14,7 +14,7 @@ exports.putSignup = async (req, res, next) => {
     console.log(twitterId, email);
     // add user details to database
     const emailExists = await Users.fetchByEmail(email);
-    if (emailExists.length>0) {
+    if (emailExists.length > 0) {
         console.log(emailExists);
         res.status(200).json({
             message: 'Email already exists'
@@ -22,7 +22,7 @@ exports.putSignup = async (req, res, next) => {
         return;
     }
     const handleExists = await Users.fetchByHandle(handle);
-    if (handleExists.length>0) {
+    if (handleExists.length > 0) {
         console.log(handleExists);
         res.status(200).json({
             message: 'Username already exists'
@@ -47,31 +47,36 @@ exports.putSignup = async (req, res, next) => {
 exports.postLogin = async (req, res, next) => {
     const handle = req.body.handle;
     const password = req.body.password;
-    console.log(handle,password)
+    console.log(handle, password)
 
     const user = await Users.fetchByHandle(handle);
     console.log(user);
-    if(user.length==0){
+    if (user.length == 0) {
         res.status(200).json({
             message: 'Username does not exist!'
         });
         return;
     }
-    const authenticated = await bcrypt.compare(password,user[0].password);
+    const authenticated = await bcrypt.compare(password, user[0].password);
     console.log(authenticated);
-    if(!authenticated){
+    if (!authenticated) {
         res.status(200).json({
             message: 'Incorrect password'
         });
         return;
     }
     else {
+        const token = jwt.sign({
+            handle
+        }, 'somesupersecret', { expiresIn: '1h' });
+        console.log(token)
         res.status(200).json({
             message: 'success!',
-            user
+            token,
+            user: user[0]
         })
     }
 
-    
+
     // authenticate user with database
 }

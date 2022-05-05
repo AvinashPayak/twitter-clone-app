@@ -31,10 +31,10 @@ export default {
   created() {
     this.getUserDetails();
   },
-  watch:{
-    $route(newRoute){
+  watch: {
+    $route(newRoute) {
       this.getUserDetails(newRoute);
-    }
+    },
   },
   methods: {
     getHandle() {
@@ -47,11 +47,17 @@ export default {
       return this.user.lastName;
     },
     async getUserDetails() {
+      const token = this.$store.getters["user/getToken"];
+      console.log("tweetlist ", token);
       const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           twitterId: this.$route.params.id,
+          token
         }),
       };
       const response = await fetch(
